@@ -1,0 +1,32 @@
+name: Iot qemu System Build
+
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id  
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+      
+    # init ubuntu20.04 environment
+    - name: init env 
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install qemu-system-mipsel git curl wget build-essential xz-utils zip p7zip-full python3 net-tools net-tools expect bridge-utils uml-utilities openssh-server
+        ls -l
+        
+    # get system download
+    - name: download
+      run: |
+        cd /root
+        wget -P /root/ https://people.debian.org/~aurel32/qemu/mipsel/debian_wheezy_mipsel_standard.qcow2
+        wget -P /root/ https://people.debian.org/~aurel32/qemu/mipsel/vmlinux-3.2.0-4-4kc-malta
+        ls -l 
+        pwd
